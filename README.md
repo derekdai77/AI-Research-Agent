@@ -55,6 +55,3 @@ Feel free to open issues or create pull requests for improvements and fixes.
 
 This project is licensed under the [MIT License](LICENSE).
 
-## Contact
-
-For any inquiries, contact [your.email@example.com](mailto:your.email@example.com).
