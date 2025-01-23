@@ -2,13 +2,16 @@
 
 ## Overview
 
-This project demonstrates a multi-agent AI research workflow, leveraging [ReAct-style](https://arxiv.org/abs/2210.03629) reasoning-and-acting patterns, **LangGraph**, and various tools (e.g., SerpAPI, ArXiv, RAG). Multiple agents collaborate to produce **in-depth research reports**, offering a robust user experience.
+This project demonstrates a multi-agent AI research workflow, leveraging [ReAct-style](https://arxiv.org/abs/2210.03629) reasoning-and-acting patterns, **LangGraph** to visualize and manage the multi-step workflow and various tools (e.g., SerpAPI, ArXiv, RAG). Multiple agents collaborate to produce **in-depth research reports**, offering a robust user experience.
 
 ### Key Agents
 
-1. **ReActAgent**: A chain-of-thought agent that decides which tools to call, step by step.
-2. **ResearchAgent**: Oversees the high-level research workflow and delegates tasks to other agents.
-3. **ReportAgent**: Gathers final results and shapes them into a coherent report.
+- **ResearchAgent**: Main coordinator of the entire research process.
+- **ReActAgent**: Handles multi-step tool calling using a ReAct approach.
+- **ReportAgent**: Produces the final user-friendly report.
+
+Each agent and tool call is represented as a node/edge in the graph, allowing easier debugging and understanding of the workflow.
+You can also export the graph to `.dot` or `.html` for visualization.
 
 ### Tools
 

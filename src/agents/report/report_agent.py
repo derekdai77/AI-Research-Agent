@@ -6,8 +6,9 @@ class ReportAgent:
     and transforms it into a user-friendly research report.
     '''
 
-    def __init__(self, config):
+    def __init__(self, config, graph=None):
         self.config = config
+        self.graph = graph
         openai.api_key = config['services']['openai']['api_key']
 
     def generate_report(self, collected_data, topic):
@@ -24,7 +25,11 @@ class ReportAgent:
                 {"role": "user", "content": user_prompt},
             ],
             max_tokens=3000,
-            temperature=0.7
+            temperature=0.1
         )
+        final_report = response.choices[0].message['content']
 
-        return response.choices[0].message['content']
+        if self.graph:
+            self.graph.add_node("ReportAgent", data={"report": final_report})
+
+        return final_report

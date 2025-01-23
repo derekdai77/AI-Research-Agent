@@ -13,9 +13,12 @@ class ReActAgent:
     4) Iterates until it deems it has enough info.
     '''
 
-    def __init__(self, config):
+    def __init__(self, config, graph):
         self.config = config
+        self.graph = graph                     
         openai.api_key = config['services']['openai']['api_key']
+
+        self.graph.add_node("ReActAgent")
 
     def run_react_loop(self, topic, max_iterations=3):
         '''
@@ -28,7 +31,9 @@ class ReActAgent:
         context = f"Topic: {topic}\nWe are collecting data from various tools: SerpAPI, ArXiv, RAG."
         collected_data = []
 
-        for step in range(max_iterations):
+        self.graph.set_node_data("ReActAgent", {"context": context})
+
+        for i in range(max_iterations):
             action = self.decide_action(context)
             if not action:
                 # If the model decides it has enough info, break
@@ -37,21 +42,28 @@ class ReActAgent:
             tool_name, data = self.execute_action(action, topic)
             collected_data.append({tool_name: data})
 
+            node_id = f"ReActAgent-Step{i+1}-{tool_name}"
+            self.graph.add_node(node_id, data={"tool": tool_name, "data": data})
+
+            self.graph.add_edge("ReActAgent", node_id, label=f"Step {i+1}")
+
+ß            self.graph.add_edge(node_id, "ReActAgent", label="Result feedback")
+
             # Expand context with newly retrieved data
             context += f"\nTool used: {tool_name}\nData: {data}"
 
         # Combine all data into a single string
         final_data = ""
         for item in collected_data:
-            for tool, output in item.items():
-                final_data += f"\n=== {tool.upper()} OUTPUT ===\n{output}\n"
+            for tool_name, output in item.items():
+                final_data += f"\n=== {tool_name.upper()} OUTPUT ===\n{output}\n"
 
         return final_data
 
     def decide_action(self, context):
         '''
         Ask GPT-like model: Should we query a tool or stop?
-        For demonstration, we do a naive cycle: SerpAPI -> ArXiv -> RAG -> stop.
+        For demonstration, the naive cycle: SerpAPI -> ArXiv -> RAG -> stop.
         '''
         if "SERPAPI" not in context.upper():
             return "SERPAPI_SEARCH"
