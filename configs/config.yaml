@@ -1,0 +1,14 @@
+agent:
+  name: "Multi-Agent Research System"
+  version: "0.2.0"
+
+services:
+  openai:
+    api_key: "your-openai-api-key"
+  pinecone:
+    api_key: "your-pinecone-api-key"
+    environment: "us-west1-gcp"
+  serpapi:
+    api_key: "your-serpapi-key"
+  arxiv:
+    api_url: "http://export.arxiv.org/api/query"
